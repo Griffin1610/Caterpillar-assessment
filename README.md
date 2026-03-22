@@ -12,64 +12,64 @@ The database will be initialized and seeded aoutmatically on the first run of th
 # Starting the Frontend
 ```bash
 cd frontend
-npm start
+npm run dev
 ```
-Start the frontend while the backend is running, and view the project at localhost:3000
+Start the frontend while the backend is running, and view the project at localhost:5173
 
 ## Database Schema
 
 ### users
-| Column | Type | Notes |
-|---|---|---|
-| userId | INTEGER | Primary key |
-| firstName | TEXT | |
-| lastName | TEXT | |
-| email | TEXT | Unique |
-| phoneNumber | TEXT | |
-| isAdmin | INTEGER | 0 = user, 1 = admin |
+| Column | Type |
+|---|---|
+| userId | INTEGER |
+| firstName | TEXT |
+| lastName | TEXT |
+| email | TEXT |
+| phoneNumber | TEXT |
+| isAdmin | INTEGER |
 
 ### products
-| Column | Type | Notes |
-|---|---|---|
-| productId | INTEGER | Primary key |
-| productName | TEXT | Unique |
-| pricePerItem | REAL | |
-| manufacturedFrom | TEXT | |
+| Column | Type |
+|---|---|
+| productId | INTEGER |
+| productName | TEXT |
+| pricePerItem | REAL |
+| manufacturedFrom | TEXT |
 
 ### orders
-| Column | Type | Notes |
-|---|---|---|
-| orderId | INTEGER | Primary key |
-| userId | INTEGER | FK → users |
-| trackingNumber | TEXT | Unique |
-| purchaseDate | TEXT | |
-| estimatedDelivery | TEXT | |
-| shippedFrom | TEXT | |
-| shippingAddress | TEXT | |
-| shippingCity | TEXT | |
-| shippingCountry | TEXT | |
-| billingAddress | TEXT | |
-| billingCity | TEXT | |
-| billingCountry | TEXT | |
-| cardNumber | TEXT | |
-| cardType | TEXT | |
-| status | TEXT | 'pending' or 'complete' |
+| Column | Type |
+|---|---|
+| orderId | INTEGER |
+| userId | INTEGER |
+| trackingNumber | TEXT |
+| purchaseDate | TEXT |
+| estimatedDelivery | TEXT |
+| shippedFrom | TEXT |
+| shippingAddress | TEXT |
+| shippingCity | TEXT |
+| shippingCountry | TEXT |
+| billingAddress | TEXT |
+| billingCity | TEXT |
+| billingCountry | TEXT |
+| cardNumber | TEXT |
+| cardType | TEXT |
+| status | TEXT |
 
 ### order_items
-| Column | Type | Notes |
-|---|---|---|
-| orderItemId | INTEGER | Primary key |
-| orderId | INTEGER | FK → orders (cascade delete) |
-| productId | INTEGER | FK → products |
-| quantity | INTEGER | |
-| pricePerItem | REAL | Price at time of purchase |
+| Column | Type |
+|---|---|
+| orderItemId | INTEGER |
+| orderId | INTEGER |
+| productId | INTEGER |
+| quantity | INTEGER |
+| pricePerItem | REAL |
 
 ### cart_items
-| Column | Type | Notes |
-|---|---|---|
-| userId | INTEGER | PK (composite), FK → users |
-| productId | INTEGER | PK (composite), FK → products |
-| quantity | INTEGER | Must be > 0 |
+| Column | Type |
+|---|---|
+| userId | INTEGER |
+| productId | INTEGER |
+| quantity | INTEGER |
 
 ### Relationships
 - `users` → `orders` — one to many
@@ -77,4 +77,3 @@ Start the frontend while the backend is running, and view the project at localho
 - `orders` → `order_items` — one to many
 - `products` → `order_items` — one to many
 - `products` → `cart_items` — one to many
-
