@@ -27,6 +27,12 @@ export async function seedDB(): Promise<void> {
         workbook.Sheets[workbook.SheetNames[0]!]!
     );
 
+    //admin does not exist in dataset. add seed for default admin account admin@eshop.com
+    await run(
+        `INSERT OR IGNORE INTO users (firstName, lastName, email, phoneNumber, isAdmin)
+        VALUES ('Admin', 'User', 'admin@eshop.com', '0000000000', 1)`
+    );
+
     await run("BEGIN IMMEDIATE");
     try {
         for (const row of rows) {

@@ -16,6 +16,10 @@ npm run dev
 ```
 Start the frontend while the backend is running, and view the project at localhost:5173
 
+# Logging in as User or Admin
+You can create a new user, log in with email as that user or an existing user from the databse
+The admin account is admin@eshop.com, which allows the admin to complete orders
+
 ## Database Schema
 
 ### users
