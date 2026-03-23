@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import type { Order, OrderItem } from "../types";
 
 function OrderDetails() {
     const { orderId } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
+    const fromCheckout = (location.state as { from?: string })?.from === "checkout";
 
     const [order, setOrder] = useState<(Order & { items: OrderItem[] }) | null>(null);
 
@@ -19,9 +21,9 @@ function OrderDetails() {
     const total = order.items.reduce((sum, item) => sum + item.pricePerItem * item.quantity, 0);
 
     return (
-        <div>
-            <button onClick={() => navigate("/profile")}>Back to Profile</button>
-            <h1>Order #{order.orderId}</h1>
+        <div className="page">
+            <button className="outline" onClick={() => fromCheckout ? navigate("/home") : navigate(-1)}>Back</button>
+            <h1 style={{ marginTop: 20 }}>Order #{order.orderId}</h1>
 
             <h2>Tracking</h2>
             <p>Tracking Number: {order.trackingNumber}</p>
@@ -40,15 +42,15 @@ function OrderDetails() {
             <h2>Items</h2>
             <div>
                 {order.items.map(item => (
-                    <div key={item.orderItemId}>
-                        <span>{item.productName}</span>
+                    <div className="row" key={item.orderItemId}>
+                        <span className="name">{item.productName}</span>
                         <span>x{item.quantity}</span>
                         <span>${item.pricePerItem.toFixed(2)} each</span>
                         <span>${(item.pricePerItem * item.quantity).toFixed(2)}</span>
                     </div>
                 ))}
             </div>
-            <p>Total: ${total.toFixed(2)}</p>
+            <p style={{ marginTop: 12, fontWeight: 600 }}>Total: ${total.toFixed(2)}</p>
         </div>
     );
 }

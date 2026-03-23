@@ -56,30 +56,32 @@ function Login() {
 
     if (isRegistering) {
         return (
-            <div>
+            <div className="login-page">
                 <h1>Create Account</h1>
-                <form onSubmit={handleRegister}>
+                <form className="form" onSubmit={handleRegister}>
                     <input placeholder="First Name" value={firstName} onChange={e => setFirstName(e.target.value)} required />
                     <input placeholder="Last Name" value={lastName} onChange={e => setLastName(e.target.value)} required />
                     <input placeholder="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} required />
                     <input placeholder="Phone Number" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} required />
-                    {error && <p>{error}</p>}
+                    {error && <p className="error">{error}</p>}
                     <button type="submit">Create Account</button>
                 </form>
-                <button onClick={() => { setIsRegistering(false); setError(""); }}>Back to Login</button>
+                <br />
+                <button className="outline" onClick={() => { setIsRegistering(false); setError(""); }}>Back to Login</button>
             </div>
         );
     }
 
     return (
-        <div>
+        <div className="login-page">
             <h1>Login</h1>
-            <form onSubmit={handleLogin}>
+            <form className="form" onSubmit={handleLogin}>
                 <input placeholder="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} required />
-                {error && <p>{error}</p>}
+                {error && <p className="error">{error}</p>}
                 <button type="submit">Login</button>
             </form>
-            <button onClick={() => { setIsRegistering(true); setError(""); }}>Create an Account</button>
+            <br />
+            <button className="outline" onClick={() => { setIsRegistering(true); setError(""); }}>Create an Account</button>
         </div>
     );
 }

@@ -38,12 +38,12 @@ function ProductDetails() {
     if (!product) return <p>Loading...</p>;
 
     return (
-        <div>
-            <button onClick={() => navigate("/home")}>Back</button>
-            <h1>{product.productName}</h1>
-            <p>Price: ${product.pricePerItem.toFixed(2)}</p>
+        <div className="page">
+            <button className="outline" onClick={() => navigate("/home")}>Back</button>
+            <h1 style={{ marginTop: 20 }}>{product.productName}</h1>
+            <p>Price: ${product.pricePerItem.toFixed(2)} per item</p>
             <p>Manufactured from: {product.manufacturedFrom}</p>
-            <div>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 20 }}>
                 <input
                     type="number"
                     min={1}
@@ -52,8 +52,9 @@ function ProductDetails() {
                 />
                 <button onClick={addToCart}>Add to Cart</button>
             </div>
-            {error && <p>{error}</p>}
-            {added && <p>Added to cart!</p>}
+            <p style={{ marginTop: 8, color: "#555" }}>Subtotal: ${(product.pricePerItem * quantity).toFixed(2)}</p>
+            {error && <p className="error" style={{ marginTop: 10 }}>{error}</p>}
+            {added && <p className="success" style={{ marginTop: 10 }}>Added to cart!</p>}
         </div>
     );
 }

@@ -11,6 +11,7 @@ function Checkout() {
     const [quantities, setQuantities] = useState<Record<number, number>>({});
     const [error, setError] = useState("");
     const [cartError, setCartError] = useState("");
+    const [reviewing, setReviewing] = useState(false);
 
     const [shippingAddress, setShippingAddress] = useState("");
     const [shippingCity, setShippingCity] = useState("");
@@ -20,6 +21,7 @@ function Checkout() {
     const [billingCountry, setBillingCountry] = useState("");
     const [cardNumber, setCardNumber] = useState("");
     const [cardType, setCardType] = useState("");
+
     const estimatedDelivery = (() => {
         const d = new Date();
         d.setDate(d.getDate() + 7);
@@ -61,8 +63,12 @@ function Checkout() {
         setCart(data);
     }
 
-    async function placeOrder(e: { preventDefault: () => void }) {
+    function handleReview(e: { preventDefault: () => void }) {
         e.preventDefault();
+        setReviewing(true);
+    }
+
+    async function placeOrder() {
         setError("");
         const res = await fetch("http://localhost:4000/api/orders", {
             method: "POST",
@@ -81,25 +87,59 @@ function Checkout() {
             return;
         }
         const order = await res.json();
-        navigate(`/orders/${order.orderId}`);
+        navigate(`/orders/${order.orderId}`, { state: { from: "checkout" } });
     }
 
     const total = cart.reduce((sum, item) => sum + item.pricePerItem * item.quantity, 0);
 
+    if (reviewing) {
+        return (
+            <div className="page">
+                <button className="outline" onClick={() => setReviewing(false)}>Edit</button>
+                <h1 style={{ marginTop: 20 }}>Review Order</h1>
+
+                <h2>Items</h2>
+                <div>
+                    {cart.map(item => (
+                        <div className="row" key={item.productId}>
+                            <span className="name">{item.productName}</span>
+                            <span>x{item.quantity}</span>
+                            <span>${item.pricePerItem.toFixed(2)} each</span>
+                            <span>${(item.pricePerItem * item.quantity).toFixed(2)}</span>
+                        </div>
+                    ))}
+                </div>
+                <p style={{ marginTop: 12, fontWeight: 600 }}>Total: ${total.toFixed(2)}</p>
+
+                <h2>Shipping</h2>
+                <p>{shippingAddress}, {shippingCity}, {shippingCountry}</p>
+
+                <h2>Billing</h2>
+                <p>{billingAddress}, {billingCity}, {billingCountry}</p>
+
+                <h2>Payment</h2>
+                <p>{cardType} ending in {String(cardNumber).slice(-4)}</p>
+
+                {error && <p className="error">{error}</p>}
+                <button style={{ marginTop: 16 }} onClick={placeOrder}>Confirm and Place Order</button>
+            </div>
+        );
+    }
+
     return (
-        <div>
-            <button onClick={() => navigate("/home")}>Back</button>
-            <h1>Checkout</h1>
+        <div className="page">
+            <button className="outline" onClick={() => navigate("/home")}>Back</button>
+            <h1 style={{ marginTop: 20 }}>Checkout</h1>
 
             {cart.length === 0 ? (
                 <p>Your cart is empty.</p>
             ) : (
                 <>
                     <div>
-                        {cartError && <p>{cartError}</p>}
+                        {cartError && <p className="error">{cartError}</p>}
                         {cart.map(item => (
-                            <div key={item.productId}>
-                                <span>{item.productName}</span>
+                            <div className="row" key={item.productId}>
+                                <span className="name">{item.productName}</span>
                                 <span>${item.pricePerItem.toFixed(2)} each</span>
                                 <input
                                     type="number"
@@ -109,13 +149,13 @@ function Checkout() {
                                     onBlur={e => updateQuantity(item.productId, Number(e.target.value))}
                                 />
                                 <span>${(item.pricePerItem * item.quantity).toFixed(2)}</span>
-                                <button onClick={() => removeItem(item.productId)}>Remove</button>
+                                <button className="outline" onClick={() => removeItem(item.productId)}>Remove</button>
                             </div>
                         ))}
-                        <p>Total: ${total.toFixed(2)}</p>
+                        <p style={{ marginTop: 12, fontWeight: 600 }}>Total: ${total.toFixed(2)}</p>
                     </div>
 
-                    <form onSubmit={placeOrder}>
+                    <form className="form" onSubmit={handleReview}>
                         <h2>Shipping</h2>
                         <input placeholder="Address" value={shippingAddress} onChange={e => setShippingAddress(e.target.value)} required />
                         <input placeholder="City" value={shippingCity} onChange={e => setShippingCity(e.target.value)} required />
@@ -127,11 +167,10 @@ function Checkout() {
                         <input placeholder="Country" value={billingCountry} onChange={e => setBillingCountry(e.target.value)} required />
 
                         <h2>Payment</h2>
-                        <input placeholder="Card Number" value={cardNumber} onChange={e => setCardNumber(e.target.value)} required />
+                        <input placeholder="Card Number" inputMode="numeric" pattern="[0-9]*" value={cardNumber} onChange={e => setCardNumber(e.target.value)} required />
                         <input placeholder="Card Type (e.g. Visa)" value={cardType} onChange={e => setCardType(e.target.value)} required />
 
-{error && <p>{error}</p>}
-                        <button type="submit">Place Order</button>
+                        <button type="submit">Review Order</button>
                     </form>
                 </>
             )}

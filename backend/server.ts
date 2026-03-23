@@ -19,6 +19,8 @@ app.use("/api/cart", cartRouter);
 app.use("/api/orders", ordersRouter);
 app.use("/api/admin", adminRouter);
 
+app.get("/", (_req, res) => res.send("EShop API is running"));
+
 //global error handler
 app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
     console.error(err);
@@ -28,7 +30,7 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
 async function main() {
     await initDB();
     await seedDB();
-    app.listen(4000, () => console.log("API at http://localhost:4000"));
+    app.listen(4000, () => console.log("Backend running on port 4000"));
 }
 
 main().catch((error) => {

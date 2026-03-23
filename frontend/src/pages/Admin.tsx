@@ -28,28 +28,22 @@ function Admin() {
     }
 
     return (
-        <div>
-            <button onClick={() => navigate("/home")}>Back</button>
-            <h1>Admin — Pending Orders</h1>
+        <div className="page">
+            <button className="outline" onClick={() => navigate("/home")}>Back</button>
+            <h1 style={{ marginTop: 20 }}>Admin — Pending Orders</h1>
 
-            {error && <p>{error}</p>}
+            {error && <p className="error">{error}</p>}
 
             {orders.length === 0 ? (
                 <p>No pending orders.</p>
             ) : (
                 <div>
                     {orders.map(order => (
-                        <div key={order.orderId}>
-                            <span>Order #{order.orderId}</span>
-                            <span>Tracking: {order.trackingNumber}</span>
-                            <span>User: {order.userId}</span>
-                            <span>Date: {order.purchaseDate}</span>
-                            <span
-                                onClick={() => navigate(`/orders/${order.orderId}`)}
-                                style={{ cursor: "pointer" }}
-                            >
-                                View Details
-                            </span>
+                        <div className="row" key={order.orderId}>
+                            <span className="name">Order #{order.orderId}</span>
+                            <span>{order.trackingNumber}</span>
+                            <span>{order.purchaseDate}</span>
+                            <button className="outline" onClick={() => navigate(`/orders/${order.orderId}`)}>View</button>
                             <button onClick={() => markComplete(order.orderId)}>Mark Complete</button>
                         </div>
                     ))}
